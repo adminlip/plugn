@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
      #gh \
      #composer \
      libicu-dev \
+     redis-tools \
      && docker-php-ext-configure intl \
      && docker-php-ext-configure gd --with-freetype --with-jpeg \
      && docker-php-ext-install gd pdo pdo_mysql zip  exif intl
@@ -76,8 +77,6 @@ COPY ./cron/cronlist /etc/cron.d/cronlist
 RUN chmod 0644 /etc/cron.d/cronlist
 RUN crontab /etc/cron.d/cronlist
 
-# Start cron service
-RUN service cron start
 
 #todo: not getting fired
 #RUN ./init --env=Dev-Server-Nginx --overwrite=All 
@@ -92,9 +91,15 @@ RUN ln -s /etc/nginx/sites-available/development.conf /etc/nginx/sites-enabled/
 # run default nginx config
 RUN rm /etc/nginx/sites-enabled/default
 
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Expose port 80
 EXPOSE 80
 
 # Start Nginx and PHP-FPM
 #CMD ["sh", "-c", "service nginx start && ./yii migrate && php-fpm"]
-CMD ["sh", "-c", "composer install && ./init --env=Dev-Server-Docker --overwrite=All && ./yii migrate --interactive=0 && service nginx restart && php-fpm && tail -f /dev/null"]
+ENV APP_ENV=Dev-Server-Docker
+ENTRYPOINT ["docker-entrypoint.sh"]
