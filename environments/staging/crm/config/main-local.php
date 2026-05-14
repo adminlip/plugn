@@ -1,26 +1,17 @@
 <?php
 
+[$env, $requiredEnv] = require __DIR__ . '/../../common/config/env-local.php';
+
 $config = [
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'IPzstcYT6LrNZ7AsUzf8Zz5XtEtX1',
+            'cookieValidationKey' => $requiredEnv('STAGING_CRM_COOKIE_VALIDATION_KEY'),
         ],
     ],
 ];
 
-if (YII_DEBUG) {
-    // configuration adjustments for 'dev' environment
-    $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = [
-        'class' => 'yii\debug\Module',
-        'allowedIPs' => ['*'],
-    ];
-
-    $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
-    ];
-}
+// Debug and GII modules are disabled in staging for security
+// Do not enable these modules in a staging/production environment
 
 return $config;

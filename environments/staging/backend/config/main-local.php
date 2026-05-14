@@ -1,14 +1,16 @@
 <?php
 
+[$env, $requiredEnv] = require __DIR__ . '/../../common/config/env-local.php';
+
 $config = [
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'IPzstcYT6LrNZ7AsUzf8Zz5XtEtX1',
+            'cookieValidationKey' => $requiredEnv('STAGING_BACKEND_COOKIE_VALIDATION_KEY'),
         ],
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
-            'baseUrl' => '/~saoud/plugn/plugn-yii2/backend/web/',
+            'baseUrl' => $env('STAGING_BACKEND_BASE_URL', '/~saoud/plugn/plugn-yii2/backend/web/'),
             'enablePrettyUrl' => false,
             'showScriptName' => false,
         ],
@@ -16,26 +18,15 @@ $config = [
             // Use Redis as a cache
             'class' => 'yii\redis\Session',
             'redis' => [
-                'hostname' => 'plugn-redis.0x1cgp.0001.euw2.cache.amazonaws.com',
-                'port' => 6379,
-                'database' => 7,
+                'hostname' => $requiredEnv('STAGING_REDIS_HOSTNAME'),
+                'port' => $env('STAGING_REDIS_PORT', 6379),
+                'database' => $env('STAGING_BACKEND_REDIS_DATABASE', 7),
             ]
         ],
     ],
 ];
 
-if (!YII_ENV_TEST) {
-    // configuration adjustments for 'dev' environment
-    $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = [
-        'class' => 'yii\debug\Module',
-        'allowedIPs' => ['*']
-    ];
-
-    $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
-    ];
-}
+// Debug and GII modules are disabled in staging for security
+// Do not enable these modules in a staging/production environment
 
 return $config;
