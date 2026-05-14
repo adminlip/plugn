@@ -60,14 +60,12 @@ COPY . /home/ubuntu/plugn
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Install PHP dependencies during build time
+RUN composer install --no-dev --optimize-autoloader
+
 # Set permissions for the web server
-#RUN chown -R www-data:www-data /home/ubuntu/plugn \
-RUN chmod -R 775 /home/ubuntu/plugn
-
-RUN cd /home/ubuntu/plugn
-
-#RUN composer install 
-#--no-dev
+RUN chown -R www-data:www-data /home/ubuntu/plugn \
+    && chmod -R 775 /home/ubuntu/plugn
 
 #COPY ./wait-for-it.sh /usr/local/bin/wait-for-it
 #RUN chmod +x /usr/local/bin/wait-for-it
@@ -95,5 +93,4 @@ RUN rm /etc/nginx/sites-enabled/default
 EXPOSE 80
 
 # Start Nginx and PHP-FPM
-#CMD ["sh", "-c", "sleep 5 && ./yii migrate && service nginx restart && php-fpm && tail -f /dev/null"]
-CMD ["sh", "-c", "composer install && ./init --env=Production-Docker --overwrite=All && ./yii migrate --interactive=0 && service nginx restart && php-fpm && tail -f /dev/null"]
+CMD ["sh", "-c", "service nginx restart && php-fpm && tail -f /dev/null"]
