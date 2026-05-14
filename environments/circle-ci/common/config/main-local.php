@@ -1,4 +1,9 @@
-<?php
+&lt;?php
+
+$env = static function (string $name, string $default = ''): string {
+    $value = getenv($name);
+    return $value === false ? $default : $value;
+};
 
 return [
     'components' => [
@@ -19,33 +24,28 @@ return [
         ],
         'eventManager' => [
             'class' => 'common\components\EventManager',
-            "sqsRagion" => "eu-west-2",
-            "sqsKey" => "AKIAWMITDJRKXNWDOBNJ",
-            "sqsSecret" => "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",
-            "sqsQueue" => "438663597141/PlugnDev"
+            "sqsRagion" => $env('PLUGN_SQS_REGION', 'eu-west-2'),
+            "sqsKey" => $env('PLUGN_SQS_KEY'),
+            "sqsSecret" => $env('PLUGN_SQS_SECRET'),
+            "sqsQueue" => $env('PLUGN_SQS_QUEUE', '438663597141/PlugnDev')
         ],
         'walletManager' => [
             'class' => 'common\components\WalletManager',
-            'apiKey' => 'QSw2ByGUITXFNjJVNNjyzxdbvYP9rXbG',
-            'apiEndpoint' => 'http://localhost/wallet/webhook/web/v1',//todo
-            'companyWalletUserID' => 'user_fcac8a5f-52a2-11ed-a68e-d85ed3a264df'
+            'apiKey' => $env('PLUGN_WALLET_API_KEY'),
+            'apiEndpoint' => $env('PLUGN_WALLET_API_ENDPOINT', 'http://localhost/wallet/webhook/web/v1'),
+            'companyWalletUserID' => $env('PLUGN_COMPANY_WALLET_USER_ID')
         ],
         'gpt' => [
             'class' => 'common\components\GptComponent',
-            'token' => 'QSw2ByGUITXFNjJVNNjyzxdbvYP9rXbG',
-            'apiEndpoint' => 'http://localhost:8083/'
+            'token' => $env('PLUGN_GPT_TOKEN'),
+            'apiEndpoint' => $env('PLUGN_GPT_API_ENDPOINT', 'http://localhost:8083/')
         ],
         'resourceManager' => [
             'class' => 'common\components\S3ResourceManager',
-            'region' => 'eu-west-2', // Bucket based in London
-            'key' => 'AKIAWMITDJRKVN5ODY2X',
-            'secret' => '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',
-            'bucket' => 'plugn-public-anyone-can-upload-24hr-expiry'
-            /**
-             * You can access the Temporary bucket with:
-             * https://pogi-public-anyone-can-upload-24hr-expiry.s3.amazonaws.com/
-             * https://pogi-public-anyone-can-upload-24hr-expiry.s3.amazonaws.com/folderName/fileName.jpg
-             */
+            'region' => $env('PLUGN_S3_REGION', 'eu-west-2'),
+            'key' => $env('PLUGN_S3_KEY'),
+            'secret' => $env('PLUGN_S3_SECRET'),
+            'bucket' => $env('PLUGN_S3_BUCKET', 'plugn-public-anyone-can-upload-24hr-expiry')
         ],
 
         'tapPayments' => [
@@ -72,8 +72,8 @@ return [
         //microservices
         'blogManager' => [
             'class' => 'common\components\BlogManager',
-            'apiEndpoint' => 'http://localhost:8080/v1',
-            'token' => 'Lu4vPW4Npfgce6WkXdt9OErpxXdB7GW4'
+            'apiEndpoint' => $env('PLUGN_BLOG_API_ENDPOINT', 'http://localhost:8080/v1'),
+            'token' => $env('PLUGN_BLOG_TOKEN')
         ],
         'agentApiUrlManager' => [
             'class' => 'yii\web\UrlManager',
