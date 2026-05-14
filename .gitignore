@@ -62,8 +62,6 @@ phpunit.phar
 /partner/web/robots.txt
 /partner/web/index-test.php
 
-composer.lock
-
 dump.rdb
 partner/config/main-local.php
 partner/web/index-test.php
