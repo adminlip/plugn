@@ -21,6 +21,12 @@ services:
       - "3307:3306"
     networks:
       - plugn-dev-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uplugnuser", "-pplugn"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   #composer_installation:
   #  container_name: composer_installation
@@ -32,27 +38,32 @@ services:
   app:
     build: 
       context: .
-      dockerfile: ./Dockerfile-nginx-dev
+      dockerfile: ./Dockerfile-nginx-local
     container_name: plugn-backend-dev
-    #command:
-    #  - /bin/sh
-    #  - -c
-    #  - |
-    #    sleep 5 && \
-    #    ./init --env=Dev-Server --overwrite=All && \
-    #    ./yii migrate && \
-    #    sleep 1 && \
-    #    ln -s /etc/nginx/sites-available/basic.conf /etc/nginx/sites-enabled/ && \
-    #    service nginx restart  && \
-    #    tail -f /dev/null  # Keep container running
     ports:
-      - "80:80" #app endpoint
+      - "8080:8080" # backend
+      - "8081:8081" # agent
+      - "8082:8082" # api
+      - "8083:8083" # crm
+      - "8084:8084" # frontend
+      - "8085:8085" # partner
+      - "8086:8086" # shortner
+      - "8087:8087" # remail
     volumes:
       - .:/home/ubuntu/plugn
-      #- ./nginx/basic.conf:/etc/nginx/sites-available/basic.conf
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=plugn
+      - MYSQL_USER=plugnuser
+      - MYSQL_PASSWORD=plugn
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
-      - redis
-      - mysql
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - plugn-dev-network
 
