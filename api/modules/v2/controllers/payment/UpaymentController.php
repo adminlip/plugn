@@ -326,7 +326,8 @@ class UpaymentController extends BaseController
         $response = $this->getStatus($order, $track_id);
 
         if($response && $response['status'] != "1") {
-            echo "wrong track id?"; die();
+            Yii::error('Invalid track id for order: ' . $order->order_uuid, __METHOD__);
+            return false;
         }
 
         //$refid = $this->request->get['ref'];

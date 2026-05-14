@@ -403,8 +403,7 @@ class TabbyController extends BaseController
                                 "status"         => $status,
                                 "source"         => 'webhook',
                             ]);
-                            print_r($tt->errors);
-                            die();
+                            Yii::error('Tabby transaction save failed: ' . print_r($tt->errors, true), __METHOD__);
                         }
 
                         //$this->clear_customer_session($order['customer_id'], $sid->sid);

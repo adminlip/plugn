@@ -51,8 +51,7 @@ class PasswordResetRequestForm extends Model {
             $agent->generatePasswordResetToken();
 
             if (!$agent->save()) {
-              die(var_dump($agent->errors));
-
+                Yii::error('Agent save failed: ' . print_r($agent->errors, true), __METHOD__);
                 return false;
             }
         }

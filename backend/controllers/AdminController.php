@@ -88,8 +88,7 @@ class AdminController extends Controller {
 
                 return $this->redirect(['view', 'id' => $model->admin_id]);
             } else {
-                print_r($model->getErrors());
-                exit;
+                Yii::error('Admin creation failed: ' . print_r($model->getErrors(), true), __METHOD__);
             }
         }
 

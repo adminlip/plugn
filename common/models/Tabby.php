@@ -89,9 +89,7 @@ class Tabby extends Model
 
             if (!$tt->save()) {
                 TabbyTransaction::ddlog('error', 'addTransaction', null, $tt->errors);
-                echo "<pre />";
-                print_r($tt->errors);
-                die();
+                Yii::error('Tabby transaction save failed: ' . print_r($tt->errors, true), __METHOD__);
             }
         }
     }
@@ -131,10 +129,8 @@ class Tabby extends Model
         $tt->transaction_id = $data['transaction_id'];
 
         if (!$tt->save()) {
-            TabbyTransaction::ddlog('error', 'addTransaction', null, $tt->errors);
-            echo "<pre />";
-            print_r($tt->errors);
-            die();
+            TabbyTransaction::ddlog('error', 'updateTransaction', null, $tt->errors);
+            Yii::error('Tabby transaction update failed: ' . print_r($tt->errors, true), __METHOD__);
         }
 
         //} else {

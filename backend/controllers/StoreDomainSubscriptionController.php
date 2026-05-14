@@ -83,7 +83,7 @@ class StoreDomainSubscriptionController extends Controller
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'subscription_uuid' => $model->subscription_uuid]);
             } else {
-                print_r($model->getErrors());
+                Yii::error('StoreDomainSubscription creation failed: ' . print_r($model->getErrors(), true), __METHOD__);
             }
         } else {
             $model->loadDefaultValues();
