@@ -1,12 +1,25 @@
 <?php
 
+$env = static function (string $name, $default = null) {
+    $value = getenv($name);
+    return $value === false ? $default : $value;
+};
+
+$mysqlHost = $env('MYSQLHOST', $env('MYSQL_HOST', 'mysql'));
+$mysqlPort = $env('MYSQLPORT', $env('MYSQL_PORT', '3306'));
+$mysqlDatabase = $env('MYSQLDATABASE', $env('MYSQL_DATABASE', 'railway'));
+
+$redisHost = $env('REDISHOST', $env('REDIS_HOST', 'redis'));
+$redisPort = (int) $env('REDISPORT', $env('REDIS_PORT', 6379));
+$redisDatabase = (int) $env('REDIS_DATABASE', 0);
+
 return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=mysql-eemz.railway.internal:3306;dbname=railway',
-            'username' => 'root',
-            'password' => 'xXzEvGzMcCYiFIkfogNUjqLcGFRVHbRp',
+            'dsn' => sprintf('mysql:host=%s:%s;dbname=%s', $mysqlHost, $mysqlPort, $mysqlDatabase),
+            'username' => $env('MYSQLUSER', $env('MYSQL_USER', 'root')),
+            'password' => $env('MYSQLPASSWORD', $env('MYSQL_PASSWORD', '')),
             'charset' => 'utf8mb4',
             // Enable Caching of Schema to Reduce SQL Queries
             'enableSchemaCache' => true,
@@ -79,11 +92,11 @@ return [
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => 'redis-xkt_.railway.internal',
-            'username' => 'default',
-            'password' => 'BGtjhtRKQJvAirawTCZjYrjwRrQAGFBS',
-            'port' => 6379,
-            'database' => 0,
+            'hostname' => $redisHost,
+            'username' => $env('REDISUSER', $env('REDIS_USERNAME', 'default')),
+            'password' => $env('REDISPASSWORD', $env('REDIS_PASSWORD', '')),
+            'port' => $redisPort,
+            'database' => $redisDatabase,
         ],
         'cache' => [
             'class' => 'yii\redis\Cache',

@@ -1,5 +1,14 @@
 <?php
 
+$env = static function (string $name, $default = null) {
+    $value = getenv($name);
+    return $value === false ? $default : $value;
+};
+
+$redisHost = $env('REDISHOST', $env('REDIS_HOST', 'redis'));
+$redisPort = (int) $env('REDISPORT', $env('REDIS_PORT', 6379));
+$redisDatabase = (int) $env('REDIS_DATABASE', 0);
+
 return [
     'components' => [
         'request' => [
@@ -17,11 +26,11 @@ return [
             'class' => 'yii\redis\Session',
             'redis' => [
                 'class' => 'yii\redis\Connection',
-                'hostname' => 'redis-xkt_.railway.internal',
-                'username' => 'default',
-                'password' => 'BGtjhtRKQJvAirawTCZjYrjwRrQAGFBS',
-                'port' => 6379,
-                'database' => 0,
+                'hostname' => $redisHost,
+                'username' => $env('REDISUSER', $env('REDIS_USERNAME', 'default')),
+                'password' => $env('REDISPASSWORD', $env('REDIS_PASSWORD', '')),
+                'port' => $redisPort,
+                'database' => $redisDatabase,
             ]
         ],
     ],
