@@ -1,4 +1,9 @@
-<?php
+&lt;?php
+
+$env = static function (string $name, string $default = ''): string {
+    $value = getenv($name);
+    return $value === false ? $default : $value;
+};
 
 return [
   'apiEndpoint' => 'http://localhost/~Saoud/plugn/plugn-yii2/api/web',
@@ -9,8 +14,7 @@ return [
   'newDashboardAppUrl' => 'https://dash.dev.plugn.io',
   'oneSignalStoreAPPID' => '',
   'oneSignalStoreAPIKey' => '',
-  'oneSignalAgentAPPID' => 'e861decd-d541-4a08-92fa-8fc2dcb15aea',//83eb72f3-98c8-48a7-8b40-57736914f1cb
-  'oneSignalAgentAPIKey' => 'ZGVkMGJhMTctMTg5ZC00MGExLWExYWQtNDM0ZGM0OTFjYjJj',
-  //MmVhMTNhZTUtMmY1Zi00Y2YyLWEzNWYtZjYyMWIxNTk1YzUx
-  'currencylayer_api_key' => 'b9d4093e0c8327cbc624b9239450f72d'
+  'oneSignalAgentAPPID' => $env('PLUGN_ONESIGNAL_AGENT_APP_ID'),
+  'oneSignalAgentAPIKey' => $env('PLUGN_ONESIGNAL_AGENT_API_KEY'),
+  'currencylayer_api_key' => $env('PLUGN_CURRENCYLAYER_API_KEY')
 ];
