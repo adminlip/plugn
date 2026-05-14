@@ -8,23 +8,37 @@ return [
     'name' => 'Plugn',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => getenv('REDIS_HOST') ?: 'localhost',
+            'port' => getenv('REDIS_PORT') ?: 6379,
+            'database' => getenv('REDIS_CACHE_DB') ?: 0,
+            'password' => getenv('REDIS_PASSWORD') ?: null,
+            'connectionTimeout' => 5,
+            'dataTimeout' => 5,
+            'retries' => 2,
         ],
-        /*   'redis' => [
-               'class' => 'yii\redis\Connection',
-               'hostname' => 'localhost',
-               'port' => 6379,
-               'database' => 0,
-           ],
-           'cache' => [
-               'class' => 'yii\redis\Cache',
-               'redis' => [
-                   'hostname' => 'localhost',
-                   'port' => 6379,
-                   'database' => 0,
-               ]
-           ],*/
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => getenv('REDIS_HOST') ?: 'localhost',
+                'port' => getenv('REDIS_PORT') ?: 6379,
+                'database' => getenv('REDIS_CACHE_DB') ?: 0,
+                'password' => getenv('REDIS_PASSWORD') ?: null,
+            ],
+            'defaultDuration' => 86400, // 24 hours
+            'keyPrefix' => 'plugn_',
+        ],
+        'session' => [
+            'class' => 'yii\redis\Session',
+            'redis' => [
+                'hostname' => getenv('REDIS_HOST') ?: 'localhost',
+                'port' => getenv('REDIS_PORT') ?: 6379,
+                'database' => getenv('REDIS_SESSION_DB') ?: 1,
+                'password' => getenv('REDIS_PASSWORD') ?: null,
+            ],
+            'timeout' => 3600, // 1 hour session timeout
+        ],
         'formatter' => [
         'thousandSeparator' => ',',
         'decimalSeparator' => '.',

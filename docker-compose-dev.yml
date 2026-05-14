@@ -60,12 +60,16 @@ services:
     image: redis:6.2.3
     ports:
       - "6379:6379"
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru --appendonly yes
     networks:
       - plugn-dev-network
-   # command:
-   #   - redis-server --port 7777
     volumes:
     - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   redis-data:

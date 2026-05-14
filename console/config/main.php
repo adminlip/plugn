@@ -24,9 +24,17 @@ return [
         ],
     ],
     'components' => [
-       /* 'cache' => [
-            'class' => 'yii\caching\FileCache',
-        ],*/
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => getenv('REDIS_HOST') ?: 'localhost',
+                'port' => getenv('REDIS_PORT') ?: 6379,
+                'database' => getenv('REDIS_CACHE_DB') ?: 0,
+                'password' => getenv('REDIS_PASSWORD') ?: null,
+            ],
+            'defaultDuration' => 86400,
+            'keyPrefix' => 'plugn_',
+        ],
     ],
     'params' => $params,
 ];
