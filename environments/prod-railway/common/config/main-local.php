@@ -17,23 +17,23 @@ return [
         ],
         'eventManager' => [
             'class' => 'common\components\EventManager',
-            "sqsRagion" => "eu-west-2",
-            "sqsKey" => "AKIAWMITDJRKXNWDOBNJ",
-            "sqsSecret" => "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",
-            "sqsQueue" => "438663597141/Plugn"
+            "sqsRagion" => $env('AWS_SQS_REGION', 'eu-west-2'),
+            "sqsKey" => $env('AWS_SQS_ACCESS_KEY'),
+            "sqsSecret" => $env('AWS_SQS_SECRET_KEY'),
+            "sqsQueue" => $env('AWS_SQS_QUEUE', '438663597141/Plugn')
         ],
         'walletManager' => [
             'class' => 'common\components\WalletManager',
-            'apiKey' => 'POAO-BiBxj-Oqp2XOIDZgSDrTYJxOa3M',
-            'apiEndpoint' => 'https://webhook.wallet.bawes.net/v1',
+            'apiKey' => $env('WALLET_API_KEY'),
+            'apiEndpoint' => $env('WALLET_API_ENDPOINT', 'https://webhook.wallet.bawes.net/v1'),
         ],
         'resourceManager' => [
             'class' => 'common\components\S3ResourceManager',
             'authMethod' => \common\components\S3ResourceManager::AUTH_VIA_KEY_AND_SECRET,
-            'region' => 'eu-west-2', // Bucket based in London
-            'bucket' => 'plugn-uploads',
-            'key' => 'AKIAWMITDJRKWZZEWCUM',//railway-s3-access
-            'secret' => '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',
+            'region' => $env('AWS_S3_REGION', 'eu-west-2'), // Bucket based in London
+            'bucket' => $env('AWS_S3_BUCKET', 'plugn-uploads'),
+            'key' => $env('AWS_S3_ACCESS_KEY'),
+            'secret' => $env('AWS_S3_SECRET_KEY'),
             /**
              * For Local Development, we access using key and secret
              * For Dev and Production servers, access is via server embedded IAM roles so no key/secret required
@@ -47,7 +47,7 @@ return [
             'targets' => [
                 [
                     'class' => 'notamedia\sentry\SentryTarget',
-                    'dsn' => 'https://f6033f8f46ba451abbf4fa2730e8305a:7266a5e7beca44ff96fb32294ca35557@o70039.ingest.sentry.io/5220572',
+                    'dsn' => $env('SENTRY_DSN'),
                     'levels' => ['error', 'warning'],
                     'except' => [
                         'yii\web\BadRequestHttpException',
@@ -59,7 +59,7 @@ return [
                     ],
                     'clientOptions' => [
                         //which environment are we running this on?
-                        'environment' => 'production',
+                        'environment' => $env('SENTRY_ENVIRONMENT', 'production'),
                     ],
                     'context' => true // Write the context information. The default is true.
                 ],
@@ -95,10 +95,10 @@ return [
             'viewPath' => '@common/mail',
             'transport' => [
                 'scheme' => 'smtp',
-                'host' => 'email-smtp.eu-west-1.amazonaws.com',
-                'username' => 'AKIAWMITDJRKUESNXW5I',
-                'password' => 'BNLEls4MLvkjiAltRpWLTic7IMwKhggzqRVpHU5C9TFh',
-                'port' => 587,
+                'host' => $env('SMTP_HOST', 'email-smtp.eu-west-1.amazonaws.com'),
+                'username' => $env('SMTP_USERNAME'),
+                'password' => $env('SMTP_PASSWORD'),
+                'port' => $env('SMTP_PORT', 587),
             ]
         ],
 /*
@@ -204,13 +204,13 @@ return [
         //microservices todo: for docker 
         'blogManager' => [
             'class' => 'common\components\BlogManager',
-            'apiEndpoint' => 'http://localhost:8080/v1',
-            'token' => 'Lu4vPW4Npfgce6WkXdt9OErpxXdB7GW4'
+            'apiEndpoint' => $env('BLOG_API_ENDPOINT', 'http://localhost:8080/v1'),
+            'token' => $env('BLOG_API_TOKEN')
         ],
         'gpt' => [
             'class' => 'common\components\GptComponent',
-            'token' => 'QSw2ByGUITXFNjJVNNjyzxdbvYP9rXbG',
-            'apiEndpoint' => 'http://ec2-18-169-243-163.eu-west-2.compute.amazonaws.com:8083/'
+            'token' => $env('GPT_API_TOKEN'),
+            'apiEndpoint' => $env('GPT_API_ENDPOINT', 'http://ec2-18-169-243-163.eu-west-2.compute.amazonaws.com:8083/')
         ],
     ],
 ];
