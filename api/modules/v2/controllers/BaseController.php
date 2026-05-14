@@ -12,6 +12,12 @@ class BaseController extends Controller
     {
         $behaviors = parent::behaviors();
 
+        // Rate limiting for API abuse prevention at scale (10k stores)
+        $behaviors['rateLimiter'] = [
+            'class' => \yii\filters\RateLimiter::className(),
+            'enableRateLimitHeaders' => true,
+        ];
+
         // remove authentication filter for cors to work
         unset($behaviors['authenticator']);
 
