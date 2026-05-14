@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y \
 #RUN pecl install ffmpeg \
 #    && docker-php-ext-enable ffmpeg
 
-#COPY ./nginx/basic.conf /etc/nginx/nginx.conf
+COPY ./nginx/nginx-performance.conf /etc/nginx/nginx.conf
 
 #COPY ./nginx/basic.conf /etc/nginx/sites-available/basic.conf
 
