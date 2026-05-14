@@ -42,18 +42,18 @@ return [
         ],
         'auth0' => [
             'class' => 'common\components\Auth0',
-            'domain' => 'bawes.us.auth0.com',
-            'clientId' => "zBLi5rqikntjIFqS4iJY7RQx6445yf5w",
-            'clientSecret' => "Dt9rgs6ghpEHqKHLJf5NDp8Sps26U7OE65eYYBc3AHiWQjUNCkrjelvU18-1tCis",
-            'cookieSecret' => "woZaulpAn0qo24K1Ve6dzBgw__936d9m"// Yii::$app->request->cookieValidationKey,
+            'domain' => getenv('AUTH0_DOMAIN') ?: 'bawes.us.auth0.com',
+            'clientId' => getenv('AUTH0_CLIENT_ID') ?: '',
+            'clientSecret' => getenv('AUTH0_CLIENT_SECRET') ?: '',
+            'cookieSecret' => getenv('AUTH0_COOKIE_SECRET') ?: '',
         ],
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [
                 'google' => [
                     'class' => 'yii\authclient\clients\Google',
-                    'clientId' => '876118421973-bhut8gnlo51u6loreh8oi6drhvotocap.apps.googleusercontent.com',
-                    'clientSecret' => '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',
+                    'clientId' => getenv('GOOGLE_CLIENT_ID') ?: '',
+                    'clientSecret' => getenv('GOOGLE_CLIENT_SECRET') ?: '',
                 ],
             ],
         ],
