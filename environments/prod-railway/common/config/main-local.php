@@ -89,89 +89,17 @@ return [
             'class' => 'yii\redis\Cache',
             //'class' => 'yii\caching\FileCache',
         ],
-        //aws
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
             'viewPath' => '@common/mail',
             'transport' => [
                 'scheme' => 'smtp',
-                'host' => 'email-smtp.eu-west-1.amazonaws.com',
-                'username' => 'AKIAWMITDJRKUESNXW5I',
-                'password' => 'BNLEls4MLvkjiAltRpWLTic7IMwKhggzqRVpHU5C9TFh',
-                'port' => 587,
-            ]
-        ],
-/*
- *
-                'host' => 'smtp.elasticemail.com',
-                'username' => 'no-reply@mail.plugn.site',
-                'password' => 'E5533D22AF72CD0C79C9ADE5BA11FA7A98AC',
-                'port' => 2525,
-                'encryption' => 'tls'
-
-        //mailgun
-        'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@common/mail',
-            'transport' => [
-
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'email-smtp.eu-west-1.amazonaws.com',
-                'username' => 'AKIAWMITDJRKVNB2AFUL',//AKIAWMITDJRKTH5HBB2O //AKIAWMITDJRKTQGXUQT3
-                'password' => 'BFXl6illZPE3NP5EQrVNbCO+gMBCopuIi/uy5nwCsUZ6',//BKyPcINpZJsEVnUrMGymff27eaIztgNwSWN7xI2960eJ //GDkiUbOkIxx4qpd0fcksh//0qKvAITbj4PCywBjh
-                'port' => '587  ',
-                'encryption' => 'tls',
-                // 'username' => 'AKIAWMITDJRKTQGXUQT3',//AKIAWMITDJRKTH5HBB2O
-                // 'password' => 'GDkiUbOkIxx4qpd0fcksh//0qKvAITbj4PCywBjh',//BKyPcINpZJsEVnUrMGymff27eaIztgNwSWN7xI2960eJ
-
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.elasticemail.com',
-                'username' => 'support@plugn.io',
-                'password' => 'CD006D3ED0C5BD796D1D2C77B111CC24AF9E',
-                'port' => '2525',
-                'encryption' => 'tls'
-
-               'class' => 'Swift_SmtpTransport',
-               'host' => 'email-smtp.eu-west-1.amazonaws.com',
-               'username' => 'AKIAWMITDJRKVNB2AFUL',//AKIAWMITDJRKTH5HBB2O //AKIAWMITDJRKTQGXUQT3
-               'password' => 'BFXl6illZPE3NP5EQrVNbCO+gMBCopuIi/uy5nwCsUZ6',//BKyPcINpZJsEVnUrMGymff27eaIztgNwSWN7xI2960eJ //GDkiUbOkIxx4qpd0fcksh//0qKvAITbj4PCywBjh
-               'port' => '587',
-               'encryption' => 'tls',
-
-               */
-
-                /*
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.eu.mailgun.org',
-                'username' => 'postmaster@plugn.io',
-                'password' => '2d43d23b68911184532de9f81810f5ca-18e06deb-d74119cb',
-                'port' => '587',
-                'encryption' => 'tls',
-                // 'plugins' => [
-                //     [
-                //         'class' => 'Openbuildings\Swiftmailer\CssInlinerPlugin',
-                //     ],
-                // ],
+                'host' => getenv('SMTP_HOST') ?: 'email-smtp.eu-west-1.amazonaws.com',
+                'username' => getenv('SMTP_USERNAME') ?: '',
+                'password' => getenv('SMTP_PASSWORD') ?: '',
+                'port' => getenv('SMTP_PORT') ?: 587,
             ],
         ],
-        //sendgrid
-        'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@common/mail',
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.sendgrid.net',
-                'username' => 'apikey',
-                'password' => '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',
-                'port' => '587',
-                'encryption' => 'tls',
-                // 'plugins' => [
-                //     [
-                //         'class' => 'Openbuildings\Swiftmailer\CssInlinerPlugin',
-                //     ],
-                // ],
-            ],
-        ],*/
         'tapPayments' => [
             'gatewayToUse' => \common\components\TapPayments::USE_LIVE_GATEWAY,
         ],
