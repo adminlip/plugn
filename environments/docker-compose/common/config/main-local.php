@@ -6,7 +6,7 @@ return [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=mysql;dbname=plugn',
             'username' => 'root',
-            'password' => '12345',
+            'password' => getenv('MYSQL_PASSWORD') ?: '',
             'charset' => 'utf8mb4',
             //'port' => 3307,
             // Enable Caching of Schema to Reduce SQL Queries
@@ -28,8 +28,8 @@ return [
         'eventManager' => [
             'class' => 'common\components\EventManager',
             "sqsRagion" => "eu-west-2",
-            "sqsKey" => "AKIAWMITDJRKXNWDOBNJ",
-            "sqsSecret" => "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",
+            "sqsKey" => getenv("AWS_SQS_KEY") ?: "",
+            "sqsSecret" => getenv("AWS_SQS_SECRET") ?: "",
             "sqsQueue" => "438663597141/PlugnDev"
         ],
         'gpt' => [
@@ -63,8 +63,8 @@ return [
         'resourceManager' => [
             'class' => 'common\components\S3ResourceManager',
             'region' => 'eu-west-2', // Bucket based in London
-            'key' => 'AKIAWMITDJRKVN5ODY2X',
-            'secret' => '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',
+            'key' => getenv('AWS_BACKUP_KEY') ?: '',
+            'secret' => getenv('AWS_S3_SECRET') ?: '',
             'bucket' => 'plugn-uploads-dev-server',
             /**
              * For Local Development, we access using key and secret

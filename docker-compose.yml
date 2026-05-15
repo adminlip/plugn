@@ -1,0 +1,96 @@
+# Plugn Docker Compose - Production Ready
+# Usage: docker compose up -d
+# See DEPLOYMENT.md for full setup instructions.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx-prod
+    container_name: plugn-app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-plugn}
+      - MYSQL_USER=${MYSQL_USER:-plugn}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - REDIS_HOST=redis
+      - APP_ENV=${APP_ENV:-Production-Docker}
+    volumes:
+      - app-storage:/home/ubuntu/plugn/storage
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - plugn-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: plugn-mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-plugn}
+      - MYSQL_USER=${MYSQL_USER:-plugn}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - plugn-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: plugn-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - plugn-network
+
+  queue-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx-prod
+    container_name: plugn-queue-worker
+    restart: unless-stopped
+    command: ["sh", "-c", "cd /home/ubuntu/plugn && ./yii queue/listen"]
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-plugn}
+      - MYSQL_USER=${MYSQL_USER:-plugn}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - REDIS_HOST=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - plugn-network
+
+volumes:
+  mysql-data:
+  redis-data:
+  app-storage:
+
+networks:
+  plugn-network:
+    driver: bridge
